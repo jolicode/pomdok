@@ -13,6 +13,7 @@ func main() {
 		cli.Tree(startCommand),
 		cli.Tree(stopCommand),
 		cli.Tree(checkCommand),
+		cli.Tree(installCommand),
 	).Run(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
