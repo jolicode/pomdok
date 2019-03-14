@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"runtime"
-	"strings"
 
 	"github.com/fatih/color"
 	"github.com/mkideal/cli"
@@ -61,14 +59,4 @@ func sprintCheckCliExists(command string) string {
 	}
 
 	return out
-}
-
-func checkCliExists(command string) string {
-	return execCommand(fmt.Sprintf("which %s", command))
-}
-
-func execCommand(command string) string {
-	out, _ := exec.Command("sh", "-c", command).Output()
-
-	return strings.TrimSuffix(string(out), "\n")
 }

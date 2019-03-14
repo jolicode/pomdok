@@ -17,8 +17,12 @@ var app = appT{
 	"0.1.0-beta",
 }
 
+func sprintHeader() string {
+	return fmt.Sprintf("%s version %s", color.GreenString(app.Name), color.YellowString(app.Version))
+}
+
 func printHeader() {
-	fmt.Printf("%s version %s\n\n", color.GreenString(app.Name), color.YellowString(app.Version))
+	fmt.Print(sprintHeader() + "\n\n")
 }
 
 type rootT struct {
@@ -26,11 +30,12 @@ type rootT struct {
 }
 
 var rootCommand = &cli.Command{
-	Desc: "this is root command",
+	Desc: sprintHeader(),
 	// Argv is a factory function of argument object
 	// ctx.Argv() is if Command.Argv == nil or Command.Argv() is nil
 	Argv: func() interface{} { return new(rootT) },
 	Fn: func(ctx *cli.Context) error {
+		printHeader()
 		ctx.String("Hello, root command\n")
 		return nil
 	},
