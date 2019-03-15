@@ -51,11 +51,11 @@ func sprintCheckSystem() string {
 }
 
 func sprintCheckCliExists(command string) string {
-	out := checkCliExists(command)
-	if out == "" {
-		out = color.RedString("Not-found")
-	} else {
+	exists, out := checkBinaryExists(command)
+	if exists {
 		out = color.GreenString(out)
+	} else {
+		out = color.RedString("Not-found")
 	}
 
 	return out

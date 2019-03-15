@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
-func checkCliExists(command string) string {
-	return execCommand(fmt.Sprintf("which %s", command))
+var underline = color.New(color.Underline).SprintFunc()
+
+func checkBinaryExists(command string) (bool, string) {
+	out := execCommand(fmt.Sprintf("which %s", command))
+	return out != "", out
 }
 
 func execCommand(command string) string {
