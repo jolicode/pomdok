@@ -20,11 +20,17 @@ var checkCommand = &cli.Command{
 	Argv: func() interface{} { return new(start) },
 	Fn: func(ctx *cli.Context) error {
 		title := color.New(color.Bold).SprintFunc()
+
+		systemOk, systemString := sprintCheckSystem()
+		phpOk, phpString := sprintCheckCliExists("php")
+		nginxOk, nginxString := sprintCheckCliExists("nginx")
+		symfonyOk, symfonyString := sprintCheckCliExists("symfony")
+
 		data := [][]string{
-			[]string{title("System"), sprintCheckSystem(), "Operating System you run"},
-			[]string{title("PHP"), sprintCheckCliExists("php"), "PHP runtime"},
-			[]string{title("nginx"), sprintCheckCliExists("nginx"), "Proxy server"},
-			[]string{title("Symfony"), sprintCheckCliExists("symfony"), "Symfony CLI"},
+			[]string{title("System"), systemString, "Operating System you run"},
+			[]string{title("PHP"), phpString, "PHP runtime"},
+			[]string{title("nginx"), nginxString, "Proxy server"},
+			[]string{title("Symfony"), symfonyString, "Symfony CLI"},
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
@@ -34,23 +40,30 @@ var checkCommand = &cli.Command{
 		}
 
 		printHeader()
-		fmt.Printf("Check needed binaries, " + color.GreenString("green status") + " means everything is ok, \n" + color.RedString("red status") + " means you have to install corresponding binary.\n")
+		fmt.Printf("Check needed binaries, %s means everything is ok, \n", color.GreenString("green status"))
+		fmt.Printf("%s means you have to install corresponding binary.\n", color.RedString("red status"))
 		table.Render()
+
+		if systemOk == false || phpOk == false || nginxOk == false || symfonyOk == false {
+			fmt.Printf("We saw atleast one missing binary, you can run %s to fix it.\n", color.YellowString("pomdok install"))
+		} else {
+			fmt.Printf("Everything is fine, you can start using %s 🎉.\n", color.YellowString("pomdok"))
+		}
 
 		return nil
 	},
 }
 
-func sprintCheckSystem() string {
+func sprintCheckSystem() (bool, string) {
 	system := runtime.GOOS
 
 	if system == "linux" || system == "darwin" {
-		return color.GreenString(system)
+		return true, color.GreenString(system)
 	}
-	return color.RedString(system)
+	return false, color.RedString(system)
 }
 
-func sprintCheckCliExists(command string) string {
+func sprintCheckCliExists(command string) (bool, string) {
 	exists, out := checkBinaryExists(command)
 	if exists {
 		out = color.GreenString(out)
@@ -58,5 +71,5 @@ func sprintCheckCliExists(command string) string {
 		out = color.RedString("Not-found")
 	}
 
-	return out
+	return exists, out
 }
