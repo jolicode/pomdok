@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/fatih/color"
 	"github.com/mkideal/cli"
 )
 
@@ -18,7 +17,7 @@ var app = appT{
 }
 
 func sprintHeader() string {
-	return fmt.Sprintf("%s version %s", color.GreenString(app.Name), color.YellowString(app.Version))
+	return fmt.Sprintf("%s version %s", green(app.Name), yellow(app.Version))
 }
 
 func printHeader() {
@@ -37,7 +36,7 @@ var rootCommand = &cli.Command{
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
 		fmt.Print("Usage: pomdok <command> [configuration.yaml] [--docker docker-compose.yaml] [--output directory] [--no-proxy]\n")
-		fmt.Print("More information on usage with " + underline("help") + " command.\n")
+		fmt.Printf("More information on usage with %s command.\n", yellow("help"))
 		return nil
 	},
 }

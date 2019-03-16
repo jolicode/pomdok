@@ -5,7 +5,6 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/fatih/color"
 	"github.com/mkideal/cli"
 	"github.com/olekukonko/tablewriter"
 )
@@ -19,18 +18,16 @@ var checkCommand = &cli.Command{
 	Desc: "Check compatibility and needed binaries",
 	Argv: func() interface{} { return new(start) },
 	Fn: func(ctx *cli.Context) error {
-		title := color.New(color.Bold).SprintFunc()
-
 		systemOk, systemString := sprintCheckSystem()
 		phpOk, phpString := sprintCheckCliExists("php")
 		nginxOk, nginxString := sprintCheckCliExists("nginx")
 		symfonyOk, symfonyString := sprintCheckCliExists("symfony")
 
 		data := [][]string{
-			[]string{title("System"), systemString, "Operating System you run"},
-			[]string{title("PHP"), phpString, "PHP runtime"},
-			[]string{title("nginx"), nginxString, "Proxy server"},
-			[]string{title("Symfony"), symfonyString, "Symfony CLI"},
+			[]string{bold("System"), systemString, "Operating System you run"},
+			[]string{bold("PHP"), phpString, "PHP runtime"},
+			[]string{bold("nginx"), nginxString, "Proxy server"},
+			[]string{bold("Symfony"), symfonyString, "Symfony CLI"},
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
@@ -40,14 +37,14 @@ var checkCommand = &cli.Command{
 		}
 
 		printHeader()
-		fmt.Printf("Check needed binaries, %s means everything is ok, \n", color.GreenString("green status"))
-		fmt.Printf("%s means you have to install corresponding binary.\n", color.RedString("red status"))
+		fmt.Printf("Check needed binaries, %s means everything is ok, \n", green("green status"))
+		fmt.Printf("%s means you have to install corresponding binary.\n", red("red status"))
 		table.Render()
 
 		if systemOk == false || phpOk == false || nginxOk == false || symfonyOk == false {
-			fmt.Printf("We saw atleast one missing binary, you can run %s to fix it.\n", color.YellowString("pomdok install"))
+			fmt.Printf("We saw atleast one missing binary, you can run %s to fix it.\n", yellow("pomdok install"))
 		} else {
-			fmt.Printf("Everything is fine, you can start using %s 🎉.\n", color.YellowString("pomdok"))
+			fmt.Printf("Everything is fine, you can start using %s 🎉.\n", yellow("pomdok"))
 		}
 
 		return nil
@@ -58,17 +55,17 @@ func sprintCheckSystem() (bool, string) {
 	system := runtime.GOOS
 
 	if system == "linux" || system == "darwin" {
-		return true, color.GreenString(system)
+		return true, green(system)
 	}
-	return false, color.RedString(system)
+	return false, red(system)
 }
 
 func sprintCheckCliExists(command string) (bool, string) {
 	exists, out := checkBinaryExists(command)
 	if exists {
-		out = color.GreenString(out)
+		out = green(out)
 	} else {
-		out = color.RedString("Not-found")
+		out = red("Not-found")
 	}
 
 	return exists, out

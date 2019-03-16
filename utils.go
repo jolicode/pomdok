@@ -9,6 +9,10 @@ import (
 )
 
 var underline = color.New(color.Underline).SprintFunc()
+var bold = color.New(color.Bold).SprintFunc()
+var yellow = color.New(color.FgYellow).SprintFunc()
+var red = color.New(color.FgRed).SprintFunc()
+var green = color.New(color.FgGreen).SprintFunc()
 
 func checkBinaryExists(command string) (bool, string) {
 	out := execCommand(fmt.Sprintf("which %s", command))

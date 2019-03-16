@@ -9,7 +9,7 @@ import (
 
 func main() {
 	if err := cli.Root(rootCommand,
-		cli.Tree(helpCommand),
+		cli.Tree(cli.HelpCommand("display help information")),
 		cli.Tree(startCommand),
 		cli.Tree(stopCommand),
 		cli.Tree(checkCommand),

@@ -5,7 +5,6 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/fatih/color"
 	"github.com/mkideal/cli"
 )
 
@@ -29,7 +28,7 @@ var installCommand = &cli.Command{
 				fmt.Printf("You need to have %s or %s (MacOS) in order to be compatible with this binary.\n", underline("linux"), underline("darwin"))
 			}
 
-			fmt.Printf("Run %s command to verify if everything was installed.\n", color.YellowString("pomdok check"))
+			fmt.Printf("Run %s command to verify if everything was installed.\n", yellow("pomdok check"))
 		}
 
 		return nil
@@ -72,17 +71,17 @@ func darwinInstall() {
 func phpInstall(command string) {
 	exists, _ := checkBinaryExists("php")
 	if exists == false {
-		fmt.Printf("Starting %s installation 🏃\n", color.YellowString("php"))
+		fmt.Printf("Starting %s installation 🏃\n", yellow("php"))
 		execCommand(command)
 
 		exists, _ = checkBinaryExists("php")
 		if exists == false {
-			fmt.Printf("%s installation error ... 😭\n", color.YellowString("php"))
+			fmt.Printf("%s installation error ... 😭\n", yellow("php"))
 			os.Exit(1)
 		}
 
-		fmt.Printf("%s installed ✔\n", color.YellowString("php"))
-		fmt.Printf("With this command we only installed %s binary but no extensions,\n", color.YellowString("php"))
+		fmt.Printf("%s installed ✔\n", yellow("php"))
+		fmt.Printf("With this command we only installed %s binary but no extensions,\n", yellow("php"))
 		fmt.Printf("if you do need extensions you'll have to install them by yourself.\n")
 		fmt.Print("\n")
 	}
@@ -91,23 +90,23 @@ func phpInstall(command string) {
 func nginxInstall(command string, restart string, removeDefaultConfiguration bool) {
 	exists, _ := checkBinaryExists("nginx")
 	if exists == false {
-		fmt.Printf("Starting %s installation 🏃\n", color.YellowString("nginx"))
+		fmt.Printf("Starting %s installation 🏃\n", yellow("nginx"))
 		execCommand(command)
 
 		exists, _ = checkBinaryExists("nginx")
 		if exists == false {
-			fmt.Printf("%s installation error ... 😭\n", color.YellowString("nginx"))
+			fmt.Printf("%s installation error ... 😭\n", yellow("nginx"))
 			os.Exit(1)
 		}
 
-		fmt.Printf("%s installed ✔\n", color.YellowString("nginx"))
+		fmt.Printf("%s installed ✔\n", yellow("nginx"))
 
 		if removeDefaultConfiguration == true {
 			execCommand("rm /etc/nginx/sites-enabled/*")
 			fmt.Print("Removed default enabled configuration to not bind port 80\n")
 		}
 		execCommand(restart)
-		fmt.Printf("Restarted %s to update configuration 🔄\n", color.YellowString("nginx"))
+		fmt.Printf("Restarted %s to update configuration 🔄\n", yellow("nginx"))
 		fmt.Print("\n")
 	}
 }
@@ -115,17 +114,17 @@ func nginxInstall(command string, restart string, removeDefaultConfiguration boo
 func symfonyCliInstall() {
 	exists, _ := checkBinaryExists("symfony")
 	if exists == false {
-		fmt.Printf("Starting %s installation 🏃\n", color.YellowString("symfony"))
+		fmt.Printf("Starting %s installation 🏃\n", yellow("symfony"))
 		execCommand("wget https://get.symfony.com/cli/installer -O - | bash")
 		execCommand("mv $HOME/.symfony/bin/symfony /usr/local/bin/")
 
 		exists, _ = checkBinaryExists("symfony")
 		if exists == false {
-			fmt.Printf("%s installation error ... 😭\n", color.YellowString("symfony"))
+			fmt.Printf("%s installation error ... 😭\n", yellow("symfony"))
 			os.Exit(1)
 		}
 
-		fmt.Printf("%s installed ✔\n", color.YellowString("symfony"))
+		fmt.Printf("%s installed ✔\n", yellow("symfony"))
 		fmt.Print("\n")
 	}
 }
