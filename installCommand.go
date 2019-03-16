@@ -46,10 +46,32 @@ func checkIfRoot() bool {
 }
 
 func linuxInstall() {
+	phpInstall("apt install php -y")
+	nginxInstall(
+		"apt install nginx -y",
+		"/etc/init.d/nginx restart",
+		true)
+	symfonyCliInstall()
+
+	return
+}
+
+func darwinInstall() {
+	phpInstall("brew install php72")
+	nginxInstall(
+		"brew install nginx",
+		"brew services start nginx",
+		false)
+	symfonyCliInstall()
+
+	return
+}
+
+func phpInstall(command string) {
 	exists, _ := checkBinaryExists("php")
 	if exists == false {
 		fmt.Print("Starting " + color.YellowString("php") + " installation\n")
-		execCommand("apt install php -y")
+		execCommand(command)
 
 		exists, _ = checkBinaryExists("php")
 		if exists == false {
@@ -62,11 +84,13 @@ func linuxInstall() {
 		fmt.Printf("if you do need extensions you'll have to install them by yourself.\n")
 		fmt.Print("\n")
 	}
+}
 
-	exists, _ = checkBinaryExists("nginx")
+func nginxInstall(command string, restart string, removeDefaultConfiguration bool) {
+	exists, _ := checkBinaryExists("nginx")
 	if exists == false {
 		fmt.Printf("Starting %s installation.\n", color.YellowString("nginx"))
-		execCommand("apt install nginx -y")
+		execCommand(command)
 
 		exists, _ = checkBinaryExists("nginx")
 		if exists == false {
@@ -74,15 +98,20 @@ func linuxInstall() {
 			os.Exit(1)
 		}
 
-		fmt.Printf("%s installed in path: /etc/nginx\n", color.YellowString("nginx"))
-		execCommand("rm /etc/nginx/sites-enabled/*")
-		fmt.Print("Removed default enabled configuration to not bind port 80\n")
-		execCommand("/etc/init.d/nginx restart")
+		fmt.Printf("%s installed\n", color.YellowString("nginx"))
+
+		if removeDefaultConfiguration == true {
+			execCommand("rm /etc/nginx/sites-enabled/*")
+			fmt.Print("Removed default enabled configuration to not bind port 80\n")
+		}
+		execCommand(restart)
 		fmt.Printf("Restarted %s to update configuration\n", color.YellowString("nginx"))
 		fmt.Print("\n")
 	}
+}
 
-	exists, _ = checkBinaryExists("symfony")
+func symfonyCliInstall() {
+	exists, _ := checkBinaryExists("symfony")
 	if exists == false {
 		fmt.Print("Starting " + underline("symfony") + " installation\n")
 		execCommand("wget https://get.symfony.com/cli/installer -O - | bash")
@@ -97,10 +126,4 @@ func linuxInstall() {
 		fmt.Printf("%s installed\n", color.YellowString("symfony"))
 		fmt.Print("\n")
 	}
-
-	return
-}
-
-func darwinInstall() {
-	return
 }
