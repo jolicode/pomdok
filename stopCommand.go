@@ -6,8 +6,6 @@ import (
 
 type stop struct {
 	cli.Helper
-	Output string `cli:"o,output" usage:"Output directory for temporary files (nginx configuration, SSL certificates, ...)" dft:"/tmp/"`
-	Docker string `cli:"d,docker"`
 }
 
 var stopCommand = &cli.Command{

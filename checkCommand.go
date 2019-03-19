@@ -20,13 +20,11 @@ var checkCommand = &cli.Command{
 	Fn: func(ctx *cli.Context) error {
 		systemOk, systemString := sprintCheckSystem()
 		phpOk, phpString := sprintCheckCliExists("php")
-		nginxOk, nginxString := sprintCheckCliExists("nginx")
 		symfonyOk, symfonyString := sprintCheckCliExists("symfony")
 
 		data := [][]string{
 			[]string{bold("System"), systemString, "Operating System you run"},
 			[]string{bold("PHP"), phpString, "PHP runtime"},
-			[]string{bold("nginx"), nginxString, "Proxy server"},
 			[]string{bold("Symfony"), symfonyString, "Symfony CLI"},
 		}
 
@@ -41,7 +39,7 @@ var checkCommand = &cli.Command{
 		fmt.Printf("%s means you have to install corresponding binary.\n", red("red status"))
 		table.Render()
 
-		if systemOk == false || phpOk == false || nginxOk == false || symfonyOk == false {
+		if systemOk == false || phpOk == false || symfonyOk == false {
 			fmt.Printf("We saw atleast one missing binary, you can run %s to fix it.\n", yellow("pomdok install"))
 		} else {
 			fmt.Printf("Everything is fine, you can start using %s 🎉.\n", yellow("pomdok"))

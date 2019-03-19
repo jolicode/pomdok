@@ -48,10 +48,6 @@ func checkIfRoot() bool {
 
 func linuxInstall() {
 	phpInstall("apt install php -y")
-	nginxInstall(
-		"apt install nginx -y",
-		"/etc/init.d/nginx restart",
-		true)
 	symfonyCliInstall()
 
 	return
@@ -59,10 +55,6 @@ func linuxInstall() {
 
 func darwinInstall() {
 	phpInstall("brew install php72")
-	nginxInstall(
-		"brew install nginx",
-		"brew services start nginx",
-		false)
 	symfonyCliInstall()
 
 	return
@@ -83,30 +75,6 @@ func phpInstall(command string) {
 		fmt.Printf("%s installed ✔\n", yellow("php"))
 		fmt.Printf("With this command we only installed %s binary but no extensions,\n", yellow("php"))
 		fmt.Printf("if you do need extensions you'll have to install them by yourself.\n")
-		fmt.Print("\n")
-	}
-}
-
-func nginxInstall(command string, restart string, removeDefaultConfiguration bool) {
-	exists, _ := checkBinaryExists("nginx")
-	if exists == false {
-		fmt.Printf("Starting %s installation 🏃\n", yellow("nginx"))
-		execCommand(command)
-
-		exists, _ = checkBinaryExists("nginx")
-		if exists == false {
-			fmt.Printf("%s installation error ... 😭\n", yellow("nginx"))
-			os.Exit(1)
-		}
-
-		fmt.Printf("%s installed ✔\n", yellow("nginx"))
-
-		if removeDefaultConfiguration == true {
-			execCommand("rm /etc/nginx/sites-enabled/*")
-			fmt.Print("Removed default enabled configuration to not bind port 80\n")
-		}
-		execCommand(restart)
-		fmt.Printf("Restarted %s to update configuration 🔄\n", yellow("nginx"))
 		fmt.Print("\n")
 	}
 }
