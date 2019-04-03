@@ -35,7 +35,7 @@ var rootCommand = &cli.Command{
 	Argv: func() interface{} { return new(rootT) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
-		fmt.Print("Usage: pomdok <command> [configuration.yaml] [--docker docker-compose.yaml] [--output directory] [--no-proxy]\n")
+		fmt.Print("Usage: pomdok <command> [configuration.yaml]\n")
 		fmt.Printf("More information on usage with %s command.\n", yellow("help"))
 		return nil
 	},
