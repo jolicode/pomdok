@@ -15,7 +15,7 @@ type install struct {
 var installCommand = &cli.Command{
 	Name: "install",
 	Desc: "Install needed binaries, run check command before to be sure you need it",
-	Argv: func() interface{} { return new(start) },
+	Argv: func() interface{} { return new(install) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
 

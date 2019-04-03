@@ -16,7 +16,7 @@ type check struct {
 var checkCommand = &cli.Command{
 	Name: "check",
 	Desc: "Check compatibility and needed binaries",
-	Argv: func() interface{} { return new(start) },
+	Argv: func() interface{} { return new(check) },
 	Fn: func(ctx *cli.Context) error {
 		systemOk, systemString := sprintCheckSystem()
 		phpOk, phpString := sprintCheckCliExists("php")
