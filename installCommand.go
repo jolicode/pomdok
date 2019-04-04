@@ -36,7 +36,7 @@ var installCommand = &cli.Command{
 }
 
 func checkIfRoot() bool {
-	out := execCommand("whoami")
+	out := outputCommand("whoami")
 	if out == "root" {
 		return true
 	}
@@ -64,7 +64,7 @@ func phpInstall(command string) {
 	exists, _ := checkBinaryExists("php")
 	if exists == false {
 		fmt.Printf("Starting %s installation 🏃\n", yellow("php"))
-		execCommand(command)
+		runCommand(command)
 
 		exists, _ = checkBinaryExists("php")
 		if exists == false {
@@ -83,8 +83,8 @@ func symfonyCliInstall() {
 	exists, _ := checkBinaryExists("symfony")
 	if exists == false {
 		fmt.Printf("Starting %s installation 🏃\n", yellow("symfony"))
-		execCommand("wget https://get.symfony.com/cli/installer -O - | bash")
-		execCommand("mv $HOME/.symfony/bin/symfony /usr/local/bin/")
+		runCommand("wget https://get.symfony.com/cli/installer -O - | bash")
+		runCommand("mv $HOME/.symfony/bin/symfony /usr/local/bin/")
 
 		exists, _ = checkBinaryExists("symfony")
 		if exists == false {

@@ -15,12 +15,18 @@ var red = color.New(color.FgRed).SprintFunc()
 var green = color.New(color.FgGreen).SprintFunc()
 
 func checkBinaryExists(command string) (bool, string) {
-	out := execCommand(fmt.Sprintf("which %s", command))
+	out := outputCommand(fmt.Sprintf("which %s", command))
 	return out != "", out
 }
 
-func execCommand(command string) string {
+func outputCommand(command string) string {
 	out, _ := exec.Command("sh", "-c", command).Output()
 
 	return strings.TrimSuffix(string(out), "\n")
+}
+
+func runCommand(command string) {
+	exec.Command("sh", "-c", command).Run()
+
+	return
 }

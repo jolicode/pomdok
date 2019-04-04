@@ -86,6 +86,7 @@ var setupCommand = &cli.Command{
 
 		user, _ := user.Current()
 		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir), symfonyJson, 0644)
+		fmt.Printf("Project setup done ✔")
 
 		return nil
 	},
