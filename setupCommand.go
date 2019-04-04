@@ -1,8 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
+	"os/user"
+	"path/filepath"
 
 	"github.com/mkideal/cli"
 	"gopkg.in/yaml.v2"
@@ -24,6 +28,18 @@ type setup struct {
  *     - domain: 'www.project'
  *       path: '/project/www'
  * ```
+ *
+ * In .symfony folder, "proxy.json" file:
+ * ```
+ * {
+ *   "tld": "wip",
+ *   "port": 7080,
+ *   "domains": {
+ *     "api.project": "/home/user/dev/vendor/project/api",
+ *     "www.project": "/home/user/dev/vendor/project/www"
+ *   },
+ * }
+ * ```
  **/
 
 type Config struct {
@@ -34,6 +50,12 @@ type Config struct {
 			Path   string `yaml:"path"`
 		}
 	}
+}
+
+type SymfonyJsonProxy struct {
+	Tld     string            `json:"tld"`
+	Port    int               `json:"port"`
+	Domains map[string]string `json:"domains"`
 }
 
 var setupCommand = &cli.Command{
@@ -48,7 +70,22 @@ var setupCommand = &cli.Command{
 
 		data, _ := ioutil.ReadFile(argv.Config)
 		yaml.Unmarshal([]byte(data), &config)
-		fmt.Printf("--- t:\n%v\n\n", config.Pomdok.Tld)
+
+		fileDomains := make(map[string]string)
+		currentDirectory, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+		for _, element := range config.Pomdok.Projects {
+			fileDomains[element.Domain] = currentDirectory + element.Path
+		}
+
+		symfonyJsonData := SymfonyJsonProxy{
+			Tld:     config.Pomdok.Tld,
+			Port:    7080,
+			Domains: fileDomains,
+		}
+		symfonyJson, _ := json.MarshalIndent(symfonyJsonData, "", "  ")
+
+		user, _ := user.Current()
+		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir), symfonyJson, 0644)
 
 		return nil
 	},
