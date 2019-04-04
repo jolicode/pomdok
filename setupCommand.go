@@ -60,7 +60,7 @@ type SymfonyJsonProxy struct {
 
 var setupCommand = &cli.Command{
 	Name: "setup",
-	Desc: "Setup your local symfony binary environment to work with a given project",
+	Desc: "setup your local symfony binary environment to work with a given project",
 	Argv: func() interface{} { return new(setup) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()

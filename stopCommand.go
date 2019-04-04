@@ -15,7 +15,7 @@ type stop struct {
 
 var stopCommand = &cli.Command{
 	Name: "stop",
-	Desc: "Stop all apps linked to your symfony binary",
+	Desc: "stop all apps linked to your symfony binary",
 	Argv: func() interface{} { return new(stop) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()

@@ -15,7 +15,7 @@ type start struct {
 
 var startCommand = &cli.Command{
 	Name: "start",
-	Desc: "Start all apps linked to your symfony binary",
+	Desc: "start all apps linked to your symfony binary",
 	Argv: func() interface{} { return new(start) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
