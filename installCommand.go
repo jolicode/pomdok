@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/user"
 	"runtime"
 
 	"github.com/mkideal/cli"
@@ -36,8 +37,8 @@ var installCommand = &cli.Command{
 }
 
 func checkIfRoot() bool {
-	out := outputCommand("whoami")
-	if out == "root" {
+	user, _ := user.Current()
+	if user.Username == "root" {
 		return true
 	}
 

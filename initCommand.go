@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type setup struct {
+type initT struct {
 	cli.Helper
 	Config string `cli:"config" usage:"Your configuration file" dft:"pomdok.yaml"`
 }
@@ -58,14 +58,14 @@ type SymfonyJsonProxy struct {
 	Domains map[string]string `json:"domains"`
 }
 
-var setupCommand = &cli.Command{
-	Name: "setup",
-	Desc: "setup your local symfony binary environment to work with a given project",
-	Argv: func() interface{} { return new(setup) },
+var initCommand = &cli.Command{
+	Name: "init",
+	Desc: "init your local symfony binary environment to work with a given project",
+	Argv: func() interface{} { return new(initT) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
 
-		argv := ctx.Argv().(*setup)
+		argv := ctx.Argv().(*initT)
 		config := Config{}
 
 		data, _ := ioutil.ReadFile(argv.Config)

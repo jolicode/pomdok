@@ -12,7 +12,7 @@ func main() {
 		cli.Tree(cli.HelpCommand("display help information")),
 		cli.Tree(startCommand),
 		cli.Tree(stopCommand),
-		cli.Tree(setupCommand),
+		cli.Tree(initCommand),
 		cli.Tree(checkCommand),
 		cli.Tree(installCommand),
 	).Run(os.Args[1:]); err != nil {
