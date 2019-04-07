@@ -45,7 +45,10 @@ var initCommand = &cli.Command{
 
 		user, _ := user.Current()
 		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir), symfonyJson, 0644)
-		fmt.Printf("Project setup done ✔")
+		fmt.Printf("Project setup done ✔\n")
+
+		runCommand("/usr/local/bin/symfony local:server:ca:install")
+		fmt.Printf("Local certificate authority installed 🔐\n")
 
 		return nil
 	},

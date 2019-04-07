@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os/user"
 
 	"github.com/mkideal/cli"
@@ -42,6 +43,11 @@ var stopCommand = &cli.Command{
 }
 
 func startOrStopCommand(command string, message string) {
+	if false == symfonyProxyRunning() {
+		runCommand("/usr/local/bin/symfony proxy:start")
+		fmt.Print("Started Symfony proxy server 👮\n")
+	}
+
 	user, _ := user.Current()
 	file, _ := ioutil.ReadFile(fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir))
 
@@ -54,4 +60,14 @@ func startOrStopCommand(command string, message string) {
 	}
 
 	return
+}
+
+func symfonyProxyRunning() bool {
+	response, err := http.Get("http://127.0.0.1:7080/")
+
+	if nil != err || 200 != response.StatusCode {
+		return false
+	}
+
+	return true
 }

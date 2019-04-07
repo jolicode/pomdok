@@ -55,7 +55,7 @@ func linuxInstall() {
 }
 
 func darwinInstall() {
-	phpInstall("brew install php72")
+	phpInstall("brew install php72 nss")
 	symfonyCliInstall()
 
 	return
