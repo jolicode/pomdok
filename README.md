@@ -4,6 +4,10 @@ Simple wrapper to [Symfony Go Binary](https://symfony.com/download) for multi-ap
 
 This README does not aim to explain Symfony binary, if you want more details you can read [the article](https://jolicode.com/blog/my-local-server-with-the-symfony-binary) I made to introduce it or [official documentation](https://symfony.com/doc/current/setup/symfony_server.html).
 
+# Installation 💾
+
+Download [last release](https://github.com/Korbeil/pomdok/releases), extract it and you'll have the binary. I suggest you to put it in `/usr/local/bin/` to be easier to use but you can do whatever you want 🤷
+
 # Getting started 🚀
 
 First you need a configuration file in your project root as following:
