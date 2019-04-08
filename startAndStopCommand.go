@@ -51,7 +51,7 @@ func startOrStopCommand(command string, message string) {
 
 	user, _ := user.Current()
 	symfonyProxyConfigPah := fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir)
-	if _, err := os.Stat(symfonyProxyConfigPah); err == nil {
+	if _, err := os.Stat(symfonyProxyConfigPah); os.IsNotExist(err) {
 		fmt.Printf("Symfony proxy configuration does not exists 🙊. Maybe you should run %s before %s ? 🧐\n", yellow("init"), yellow("start"))
 		return
 	}
