@@ -39,21 +39,35 @@ pomdok stop
 
 # Troubleshooting 🤕
 
-// TODO
+## Everything working but I have untrusted https
+
+This tool does not run `symfony ca:install` command since it needs sudo. This install local certificate authority. Just run it and you'll have trusted https for you apps 😉
 
 # Commands 🛠
 
 ## init
 
-// TODO
+```
+pomdok init
+```
+
+Will sync your project with Symfony binary configuration 
 
 ## start
 
-// TODO
+```
+pomdok start
+```
+
+Will start symfony proxy if needed and all your apps
 
 ## stop
 
-// TODO
+```
+pomdok start
+```
+
+Will stop all your apps
 
 ## check
 
