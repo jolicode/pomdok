@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
-	"path/filepath"
 
 	"github.com/mkideal/cli"
 	"gopkg.in/yaml.v2"
@@ -25,15 +24,46 @@ var initCommand = &cli.Command{
 		printHeader()
 
 		argv := ctx.Argv().(*initT)
-		config := PomdokYamlConfig{}
+		if _, err := os.Stat(argv.Config); os.IsNotExist(err) {
+			fmt.Printf("%s configuration file does not exists 🙊. Maybe you should create or rename your configuration file ? 🧐\n", bold(argv.Config))
+			return nil
+		}
 
 		data, _ := ioutil.ReadFile(argv.Config)
+		config := PomdokYamlConfig{}
 		yaml.Unmarshal([]byte(data), &config)
+		if config.Pomdok.Tld == "" {
+			fmt.Printf("Configuration file error 🙊. Maybe you should give a %s to your domains 🧐\n", yellow("tld"))
+			return nil
+		}
+		if config.Pomdok.Projects == nil {
+			fmt.Printf("Configuration file error 🙊. Maybe you should add %s 🧐\n", yellow("projects"))
+			return nil
+		}
 
 		fileDomains := make(map[string]string)
-		currentDirectory, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+		currentDirectory, _ := os.Getwd()
 		for _, element := range config.Pomdok.Projects {
-			fileDomains[element.Domain] = currentDirectory + element.Path
+			if element.Domain == "" {
+				fmt.Printf("Configuration file error 🙊. One of the project has empty/no %s 🧐\n", yellow("domain"))
+				return nil
+			}
+			if element.Path == "" {
+				fmt.Printf("Configuration file error 🙊. One of the project has empty/no %s 🧐\n", yellow("path"))
+				return nil
+			}
+
+			fullPath := currentDirectory + element.Path
+			if _, err := os.Stat(fullPath); os.IsNotExist(err) {
+				fmt.Printf("Configuration file error 🙊. %s path is not found 🧐\n", bold(fullPath))
+				return nil
+			}
+
+			if _, ok := fileDomains[element.Domain]; ok {
+				fmt.Printf("Configuration file error 🙊. Domain %s is used more than one time 🧐\n", yellow(element.Domain))
+				return nil
+			}
+			fileDomains[element.Domain] = fullPath
 		}
 
 		symfonyJsonData := SymfonyJsonProxy{
@@ -46,9 +76,6 @@ var initCommand = &cli.Command{
 		user, _ := user.Current()
 		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir), symfonyJson, 0644)
 		fmt.Printf("Project setup done ✔\n")
-
-		runCommand("/usr/local/bin/symfony local:server:ca:install")
-		fmt.Printf("Local certificate authority installed 🔐\n")
 
 		return nil
 	},

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"os/user"
 
 	"github.com/mkideal/cli"
@@ -49,7 +50,12 @@ func startOrStopCommand(command string, message string) {
 	}
 
 	user, _ := user.Current()
-	file, _ := ioutil.ReadFile(fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir))
+	symfonyProxyConfigPah := fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir)
+	if _, err := os.Stat(symfonyProxyConfigPah); err == nil {
+		fmt.Printf("Symfony proxy configuration does not exists 🙊. Maybe you should run %s before %s ? 🧐\n", yellow("init"), yellow("start"))
+		return
+	}
+	file, _ := ioutil.ReadFile(symfonyProxyConfigPah)
 
 	symfonyJsonData := SymfonyJsonProxy{}
 	json.Unmarshal(file, &symfonyJsonData)
