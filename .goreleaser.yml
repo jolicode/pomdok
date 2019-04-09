@@ -17,3 +17,13 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+brew:
+  name: pomdok
+  github:
+    owner: Korbeil
+    name: pomdok
+  folder: Formula
+  homepage: "https://github.com/Korbeil/pomdok"
+  dependencies:
+    - wget
+    - nss
