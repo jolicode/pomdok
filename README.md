@@ -6,6 +6,19 @@ This README does not aim to explain Symfony binary, if you want more details you
 
 # Installation 💾
 
+## Mac
+
+You can install this binary through [Homebrew](https://brew.sh/index_fr):
+
+```bash
+brew tap korbeil/pomdok git@github.com:Korbeil/pomdok.git
+brew install pomdok
+```
+
+Or you can follow linux way below 👇
+
+## Linux
+
 Download [last release](https://github.com/Korbeil/pomdok/releases), extract it and you'll have the binary. I suggest you to put it in `/usr/local/bin/` to be easier to use but you can do whatever you want 🤷
 
 # Getting started 🚀

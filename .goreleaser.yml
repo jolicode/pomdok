@@ -24,6 +24,7 @@ brew:
     name: pomdok
   folder: Formula
   homepage: "https://github.com/Korbeil/pomdok"
+  description: "Simple wrapper to Symfony Go Binary for multi-app."
   dependencies:
     - wget
     - nss
