@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"syscall"
 
 	"github.com/mkideal/cli"
 	"gopkg.in/yaml.v2"
@@ -73,8 +74,17 @@ var initCommand = &cli.Command{
 		}
 		symfonyJson, _ := json.MarshalIndent(symfonyJsonData, "", "  ")
 
-		user, _ := user.Current()
-		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", user.HomeDir), symfonyJson, 0644)
+		currentUser, _ := user.Current()
+
+		info, _ := os.Stat(fmt.Sprintf("%s/.symfony", currentUser.HomeDir))
+		symfonyDirUserUid := fmt.Sprint((info.Sys().(*syscall.Stat_t)).Uid)
+		symfonyDirUser, _ := user.LookupId(symfonyDirUserUid)
+		if symfonyDirUser.Username != currentUser.Username {
+			fmt.Printf("Permission error 🙊. Directory ~/.symfony is owned by %s, please use: 'sudo chown -R %s ~/.symfony' 🧐\n", yellow(symfonyDirUser.Username), currentUser.Username)
+			return nil
+		}
+
+		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", currentUser.HomeDir), symfonyJson, 0644)
 		fmt.Printf("Project setup done ✔\n")
 
 		return nil
