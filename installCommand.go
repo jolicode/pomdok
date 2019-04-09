@@ -38,13 +38,17 @@ var installCommand = &cli.Command{
 
 func checkIfRoot() bool {
 	user, _ := user.Current()
-	if user.Username == "root" {
-		return true
+	if "root" != user.Username {
+		fmt.Printf("You need to use %s in order to use this command.\n", underline("sudo"))
+		return false
 	}
 
-	fmt.Printf("You need to be %s or use %s in order to use this command.\n", underline("root"), underline("sudo"))
+	if "root" == user.Username && "" == os.Getenv("SUDO_USER") {
+		fmt.Printf("Please do not run this command as %s but with %s.\n", underline("root"), underline("sudo"))
+		return false
+	}
 
-	return false
+	return true
 }
 
 func linuxInstall() {
@@ -91,6 +95,14 @@ func symfonyCliInstall() {
 		if exists == false {
 			fmt.Printf("%s installation error ... 😭\n", yellow("symfony"))
 			os.Exit(1)
+		}
+
+		currentUser, _ := user.Current()
+		username := currentUser.Username
+		if runtime.GOOS == "darwin" {
+			runCommand(fmt.Sprintf("sudo chown -R %s:staff ~/.symfony", username))
+		} else {
+			runCommand(fmt.Sprintf("sudo chown -R %s:%s ~/.symfony", username, username))
 		}
 
 		fmt.Printf("%s installed ✔\n", yellow("symfony"))
