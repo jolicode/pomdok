@@ -42,7 +42,7 @@ To init `pomdok` for your project run:
 ```bash
 pomdok init
 ```
-You can add `--config=confiuration.yaml` option if your configuration file is not in current folder with default name `pomdok.yaml`.
+You can add `--config=configuration.yaml` option if your configuration file is not in current folder with default name `pomdok.yaml`.
 
 Then to start your applications 🎉
 ```
