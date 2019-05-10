@@ -68,7 +68,8 @@ This tool does not run `symfony ca:install` command since it needs sudo. This in
 pomdok init
 ```
 
-Will sync your project with Symfony binary configuration 
+Will sync your project with Symfony binary configuration.
+This command can run anywhere inside your project tree, it will search in current directory and will goes into parent one if nothing and again and again until finding your project configuration.
 
 ## start
 
