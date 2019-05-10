@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"path"
+	"strings"
 	"syscall"
 
 	"github.com/mkideal/cli"
@@ -25,12 +27,12 @@ var initCommand = &cli.Command{
 		printHeader()
 
 		argv := ctx.Argv().(*initT)
-		if _, err := os.Stat(argv.Config); os.IsNotExist(err) {
-			fmt.Printf("%s configuration file does not exists 🙊. Maybe you should create or rename your configuration file ? 🧐\n", bold(argv.Config))
+		file := findFileUp(argv.Config, 0)
+		if file == "" {
 			return nil
 		}
 
-		data, _ := ioutil.ReadFile(argv.Config)
+		data, _ := ioutil.ReadFile(file)
 		config := PomdokYamlConfig{}
 		yaml.Unmarshal([]byte(data), &config)
 		if config.Pomdok.Tld == "" {
@@ -43,7 +45,7 @@ var initCommand = &cli.Command{
 		}
 
 		fileDomains := make(map[string]string)
-		currentDirectory, _ := os.Getwd()
+		baseDirectory := path.Dir(file)
 		for _, element := range config.Pomdok.Projects {
 			if element.Domain == "" {
 				fmt.Printf("Configuration file error 🙊. One of the project has empty/no %s 🧐\n", yellow("domain"))
@@ -54,7 +56,7 @@ var initCommand = &cli.Command{
 				return nil
 			}
 
-			fullPath := currentDirectory + element.Path
+			fullPath := baseDirectory + element.Path
 			if _, err := os.Stat(fullPath); os.IsNotExist(err) {
 				fmt.Printf("Configuration file error 🙊. %s path is not found 🧐\n", bold(fullPath))
 				return nil
@@ -89,4 +91,25 @@ var initCommand = &cli.Command{
 
 		return nil
 	},
+}
+
+func findFileUp(file string, level int) string {
+	temp := file
+	if level > 0 {
+		temp = strings.Repeat("../", level) + file
+	}
+
+	currentDirectory, _ := os.Getwd()
+	temp = path.Clean(currentDirectory + "/" + temp)
+
+	if temp == "/" {
+		fmt.Print("Configuration file does not exists 🙊. Maybe you should create or rename your configuration file ? 🧐\n")
+		return ""
+	}
+
+	if _, err := os.Stat(temp); os.IsNotExist(err) {
+		return findFileUp(file, level+1) // not found, go up
+	}
+
+	return temp
 }
