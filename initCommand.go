@@ -80,7 +80,7 @@ var initCommand = &cli.Command{
 
 		info, err := os.Stat(fmt.Sprintf("%s/.symfony", currentUser.HomeDir))
 		if os.IsNotExist(err) {
-			fmt.Printf("Symfony Binary not installed 🙊. Please use symfony check to see what you should do 🧐\n")
+			fmt.Printf("Symfony Binary not installed 🙊. Please use %s to see what you should do 🧐\n", yellow("symfony check"))
 			return nil
 		}
 
