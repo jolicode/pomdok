@@ -78,7 +78,12 @@ var initCommand = &cli.Command{
 
 		currentUser, _ := user.Current()
 
-		info, _ := os.Stat(fmt.Sprintf("%s/.symfony", currentUser.HomeDir))
+		info, err := os.Stat(fmt.Sprintf("%s/.symfony", currentUser.HomeDir))
+		if os.IsNotExist(err) {
+			fmt.Printf("Symfony Binary not installed 🙊. Please use symfony check to see what you should do 🧐\n")
+			return nil
+		}
+
 		symfonyDirUserUid := fmt.Sprint((info.Sys().(*syscall.Stat_t)).Uid)
 		symfonyDirUser, _ := user.LookupId(symfonyDirUserUid)
 		if symfonyDirUser.Username != currentUser.Username {
