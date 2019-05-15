@@ -20,10 +20,10 @@ changelog:
 brew:
   name: pomdok
   github:
-    owner: Korbeil
+    owner: jolicode
     name: pomdok
   folder: Formula
-  homepage: "https://github.com/Korbeil/pomdok"
+  homepage: "https://github.com/jolicode/pomdok"
   description: "Simple wrapper to Symfony Go Binary for multi-app."
   dependencies:
     - wget
