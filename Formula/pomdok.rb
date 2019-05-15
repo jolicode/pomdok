@@ -2,9 +2,9 @@
 class Pomdok < Formula
   desc "Simple wrapper to Symfony Go Binary for multi-app."
   homepage "https://github.com/jolicode/pomdok"
-  url "https://github.com/jolicode/pomdok/releases/download/1.0.0/pomdok_1.0.0_Darwin_x86_64.tar.gz"
+  url "https://github.com/jolicode/pomdok/releases/download/v1.0.0/pomdok_1.0.0_Darwin_x86_64.tar.gz"
   version "1.0.0"
-  sha256 "b2d20323ebd1d3483d9e271ece4dad1ae7e9c858c7d73977aff74e8c6eff1847"
+  sha256 "e7c307840e87844a5b2bab781bdb30d65fec1808ab89dac715643f0bd0630300"
   
   depends_on "wget"
   depends_on "nss"
