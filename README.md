@@ -11,7 +11,7 @@ This README does not aim to explain Symfony binary, if you want more details you
 You can install this binary through [Homebrew](https://brew.sh/index_fr):
 
 ```bash
-brew tap korbeil/pomdok git@github.com:Korbeil/pomdok.git
+brew tap jolicode/pomdok git@github.com:Korbeil/pomdok.git
 brew install pomdok
 ```
 
