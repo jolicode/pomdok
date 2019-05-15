@@ -54,6 +54,12 @@ And to stop them:
 pomdok stop
 ```
 
+# Sponsor
+
+[![JoliCode](https://jolicode.com/images/logo.svg)](https://jolicode.com)
+
+Open Source time sponsored by JoliCode
+
 # Troubleshooting 🤕
 
 ## Everything working but I have untrusted https
