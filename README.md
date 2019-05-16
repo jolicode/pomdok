@@ -11,7 +11,7 @@ This README does not aim to explain Symfony binary, if you want more details you
 You can install this binary through [Homebrew](https://brew.sh/index_fr):
 
 ```bash
-brew tap jolicode/pomdok git@github.com:Korbeil/pomdok.git
+brew tap jolicode/pomdok git@github.com:jolicode/pomdok.git
 brew install pomdok
 ```
 
@@ -19,7 +19,7 @@ Or you can follow linux way below 👇
 
 ## Linux
 
-Download [last release](https://github.com/Korbeil/pomdok/releases), extract it and you'll have the binary. I suggest you to put it in `/usr/local/bin/` to be easier to use but you can do whatever you want 🤷
+Download [last release](https://github.com/jolicode/pomdok/releases), extract it and you'll have the binary. I suggest you to put it in `/usr/local/bin/` to be easier to use but you can do whatever you want 🤷
 
 # Getting started 🚀
 
