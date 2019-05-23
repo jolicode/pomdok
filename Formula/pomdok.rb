@@ -4,7 +4,7 @@ class Pomdok < Formula
   homepage "https://github.com/jolicode/pomdok"
   url "https://github.com/jolicode/pomdok/releases/download/v1.0.0/pomdok_1.0.0_Darwin_x86_64.tar.gz"
   version "1.0.0"
-  sha256 "16d9ea2c6885e1cf1088d15d0b56ae1b6c77c50277348108edac76de19bccefe"
+  sha256 "e3c03b557a36314811e7af27b7fc36376254ed39e927ad1d9f43c3f36f8f4fc9"
   
   depends_on "wget"
   depends_on "nss"
