@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os/exec"
 	"strings"
 
@@ -15,8 +14,8 @@ var red = color.New(color.FgRed).SprintFunc()
 var green = color.New(color.FgGreen).SprintFunc()
 
 func checkBinaryExists(command string) (bool, string) {
-	out := outputCommand(fmt.Sprintf("which %s", command))
-	return out != "", out
+	path, err := exec.LookPath(command)
+	return err == nil, path
 }
 
 func outputCommand(command string) string {
