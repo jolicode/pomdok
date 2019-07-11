@@ -6,16 +6,16 @@ This README does not aim to explain Symfony binary, if you want more details you
 
 # Installation 💾
 
+pomdok is the only thing you have to install, the symfony binary will be automatically installed if not present on your computer.
+
 ## Mac
 
-You can install this binary through [Homebrew](https://brew.sh/index_fr):
+You can install this binary through [Homebrew](https://brew.sh/):
 
 ```bash
 brew tap jolicode/pomdok git@github.com:jolicode/pomdok.git
 brew install pomdok
 ```
-
-Or you can follow linux way below 👇
 
 ## Linux
 
@@ -23,7 +23,7 @@ Download [last release](https://github.com/jolicode/pomdok/releases), extract it
 
 # Getting started 🚀
 
-First you need a configuration file that we call `pomdok.yaml` in your project root as following:
+First, you need a configuration file that we call `pomdok.yaml` in your project root as following:
 ```yaml
 pomdok:
   tld: 'test'
@@ -36,7 +36,7 @@ pomdok:
       path: '/apps/back-office'
 ```
 
-You'll need atleast `tld` field and one project to have a valid configuration.
+You'll need at least `tld` field and one project to have a valid configuration.
 
 To init `pomdok` for your project run:
 ```bash
@@ -57,7 +57,7 @@ pomdok stop
 ## Symfony related
 
 To make pomdok works, we're using symfony CLI. Some setup on this side is needed:
-- You have to setup Symfony CLI proxy (you can find how on [this slide](https://speakerdeck.com/fabpot/symfony-local-web-server-dot-dot-dot-reloaded?slide=32))
+- You have to setup Symfony CLI proxy (you can find how on [this slide](https://speakerdeck.com/fabpot/symfony-local-web-server-dot-dot-dot-reloaded?slide=32) or on the [official documentation](https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy))
 - And to install Symfony CLI certificate authority through `symfony local:server:ca:install`
 
 # Troubleshooting 🤕
