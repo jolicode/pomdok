@@ -38,6 +38,7 @@ var stopCommand = &cli.Command{
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
 		startOrStopCommand("local:server:stop", "stopped 🛑")
+		runCommand("/usr/local/bin/symfony proxy:stop")
 
 		return nil
 	},
