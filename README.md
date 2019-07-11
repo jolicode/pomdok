@@ -23,7 +23,7 @@ Download [last release](https://github.com/jolicode/pomdok/releases), extract it
 
 # Getting started 🚀
 
-First you need a configuration file in your project root as following:
+First you need a configuration file that we call `pomdok.yaml` in your project root as following:
 ```yaml
 pomdok:
   tld: 'test'
@@ -54,17 +54,27 @@ And to stop them:
 pomdok stop
 ```
 
-# Sponsor
+## Symfony related
 
-[![JoliCode](https://jolicode.com/images/logo.svg)](https://jolicode.com)
-
-Open Source time sponsored by JoliCode
+To make pomdok works, we're using symfony CLI. Some setup on this side is needed:
+- You have to setup Symfony CLI proxy (you can find how on [this slide](https://speakerdeck.com/fabpot/symfony-local-web-server-dot-dot-dot-reloaded?slide=32))
+- And to install Symfony CLI certificate authority through `symfony local:server:ca:install`
 
 # Troubleshooting 🤕
 
-## Everything working but I have untrusted https
+## Some debug tips 🔧
+
+Because this tool use symfony CLI to run your servers, here is some advices to debug when need:
+- You can check running servers on `http://127.0.0.1:7080/`
+- You used start command but server is still stopped in the list ? Go in the app folder then use: `symfony local:server:start`, you'll have full logs and order to see what's happening !
+
+## Everything working but I have untrusted https ❌
 
 This tool does not run `symfony ca:install` command since it needs sudo. This install local certificate authority. Just run it and you'll have trusted https for you apps 😉
+
+## My website isn't working 😢
+
+When you start pomdok, and you don't have the symfony proxy already launched, you're site won't be reachable. You have to close your web browser (really quit it, not reduce it like mac usually do).
 
 # Commands 🛠
 
@@ -114,3 +124,9 @@ Will install all needed binaries :
 - PHP: from `apt` or `brew` depending on OS
 - Symfony: with `wget` command
 ⚠ This command obviously needs `sudo` or being logged as root.
+
+# Sponsor
+
+[![JoliCode](https://jolicode.com/images/logo.svg)](https://jolicode.com)
+
+Open Source time sponsored by JoliCode
