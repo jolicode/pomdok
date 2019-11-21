@@ -1,26 +1,27 @@
 builds:
 - env:
   - CGO_ENABLED=0
-archive:
-  replacements:
-    darwin: Darwin
-    linux: Linux
-    386: i386
-    amd64: x86_64
+archives:
+  - id: default
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      386: i386
+      amd64: x86_64
 checksum:
   name_template: 'checksums.txt'
 snapshot:
   name_template: "{{ .Tag }}-next"
 changelog:
   skip: true
-brew:
-  name: pomdok
-  github:
-    owner: jolicode
-    name: pomdok
-  folder: Formula
-  homepage: "https://github.com/jolicode/pomdok"
-  description: "Simple wrapper to Symfony Go Binary for multi-app."
-  dependencies:
-    - wget
-    - nss
+brews:
+  - name: pomdok
+    github:
+      owner: jolicode
+      name: pomdok
+    folder: Formula
+    homepage: "https://github.com/jolicode/pomdok"
+    description: "Simple wrapper to Symfony Go Binary for multi-app."
+    dependencies:
+      - wget
+      - nss
