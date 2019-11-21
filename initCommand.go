@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -27,14 +28,7 @@ var initCommand = &cli.Command{
 		printHeader()
 
 		argv := ctx.Argv().(*initT)
-		file := findFileUp(argv.Config, 0)
-		if file == "" {
-			return nil
-		}
-
-		data, _ := ioutil.ReadFile(file)
-		config := PomdokYamlConfig{}
-		yaml.Unmarshal([]byte(data), &config)
+		config, baseDirectory, _ := loadPomdokConfig(argv.Config)
 		if config.Pomdok.Tld == "" {
 			fmt.Printf("Configuration file error 🙊. Maybe you should give a %s to your domains 🧐\n", yellow("tld"))
 			return nil
@@ -45,7 +39,7 @@ var initCommand = &cli.Command{
 		}
 
 		fileDomains := make(map[string]string)
-		baseDirectory := path.Dir(file)
+		filePorts := make(map[string]int)
 		for _, element := range config.Pomdok.Projects {
 			if element.Domain == "" {
 				fmt.Printf("Configuration file error 🙊. One of the project has empty/no %s 🧐\n", yellow("domain"))
@@ -66,13 +60,16 @@ var initCommand = &cli.Command{
 				fmt.Printf("Configuration file error 🙊. Domain %s is used more than one time 🧐\n", yellow(element.Domain))
 				return nil
 			}
+
 			fileDomains[element.Domain] = fullPath
+			filePorts[element.Domain] = element.Port
 		}
 
 		symfonyJSONData := SymfonyJSONProxy{
 			Tld:     config.Pomdok.Tld,
 			Port:    7080,
 			Domains: fileDomains,
+			Ports:   filePorts,
 		}
 		symfonyJSON, _ := json.MarshalIndent(symfonyJSONData, "", "  ")
 
@@ -96,6 +93,20 @@ var initCommand = &cli.Command{
 
 		return nil
 	},
+}
+
+func loadPomdokConfig(fileName string) (PomdokYamlConfig, string, error) {
+	config := PomdokYamlConfig{}
+
+	file := findFileUp(fileName, 0)
+	if file == "" {
+		return config, "", errors.New("No file found")
+	}
+
+	data, _ := ioutil.ReadFile(file)
+	yaml.Unmarshal([]byte(data), &config)
+
+	return config, path.Dir(file), nil
 }
 
 func findFileUp(file string, level int) string {

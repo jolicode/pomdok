@@ -62,7 +62,13 @@ func startOrStopCommand(command string, message string) {
 	json.Unmarshal(file, &symfonyJSONData)
 
 	for domain, path := range symfonyJSONData.Domains {
-		runCommand(fmt.Sprintf("/usr/local/bin/symfony %s --dir=%s", command, path))
+		forcedPort := symfonyJSONData.Ports[domain]
+		formattedCommand := fmt.Sprintf("/usr/local/bin/symfony %s --dir=%s", command, path)
+		if "local:server:start --daemon" == command && 0 != forcedPort {
+			formattedCommand = fmt.Sprintf("/usr/local/bin/symfony %s --port=%d --dir=%s", command, forcedPort, path)
+		}
+
+		runCommand(formattedCommand)
 		fmt.Printf("%s %s\n", message, yellow(fmt.Sprintf("%s.%s", domain, symfonyJSONData.Tld)))
 	}
 
