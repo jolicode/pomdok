@@ -69,12 +69,12 @@ var initCommand = &cli.Command{
 			fileDomains[element.Domain] = fullPath
 		}
 
-		symfonyJsonData := SymfonyJsonProxy{
+		symfonyJSONData := SymfonyJSONProxy{
 			Tld:     config.Pomdok.Tld,
 			Port:    7080,
 			Domains: fileDomains,
 		}
-		symfonyJson, _ := json.MarshalIndent(symfonyJsonData, "", "  ")
+		symfonyJSON, _ := json.MarshalIndent(symfonyJSONData, "", "  ")
 
 		currentUser, _ := user.Current()
 
@@ -84,14 +84,14 @@ var initCommand = &cli.Command{
 			return nil
 		}
 
-		symfonyDirUserUid := fmt.Sprint((info.Sys().(*syscall.Stat_t)).Uid)
-		symfonyDirUser, _ := user.LookupId(symfonyDirUserUid)
+		symfonyDirUserUID := fmt.Sprint((info.Sys().(*syscall.Stat_t)).Uid)
+		symfonyDirUser, _ := user.LookupId(symfonyDirUserUID)
 		if symfonyDirUser.Username != currentUser.Username {
 			fmt.Printf("Permission error 🙊. Directory ~/.symfony is owned by %s, please use: 'sudo chown -R %s ~/.symfony' 🧐\n", yellow(symfonyDirUser.Username), currentUser.Username)
 			return nil
 		}
 
-		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", currentUser.HomeDir), symfonyJson, 0644)
+		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", currentUser.HomeDir), symfonyJSON, 0644)
 		fmt.Printf("Project setup done ✔\n")
 
 		return nil

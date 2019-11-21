@@ -58,12 +58,12 @@ func startOrStopCommand(command string, message string) {
 	}
 	file, _ := ioutil.ReadFile(symfonyProxyConfigPah)
 
-	symfonyJsonData := SymfonyJsonProxy{}
-	json.Unmarshal(file, &symfonyJsonData)
+	symfonyJSONData := SymfonyJSONProxy{}
+	json.Unmarshal(file, &symfonyJSONData)
 
-	for domain, path := range symfonyJsonData.Domains {
+	for domain, path := range symfonyJSONData.Domains {
 		runCommand(fmt.Sprintf("/usr/local/bin/symfony %s --dir=%s", command, path))
-		fmt.Printf("%s %s\n", message, yellow(fmt.Sprintf("%s.%s", domain, symfonyJsonData.Tld)))
+		fmt.Printf("%s %s\n", message, yellow(fmt.Sprintf("%s.%s", domain, symfonyJSONData.Tld)))
 	}
 
 	return
