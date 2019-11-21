@@ -39,7 +39,7 @@ pomdok:
 
 You'll need at least `tld` field and one project to have a valid configuration.
 
-For each "project" you have, you'll need atleast a `domain` and `port` fields. `port` field is optional and used to force a given port for your webserver.
+For each "project" you have, you'll need at least a `domain` and `port` fields. `port` field is optional and used to force a given port for your webserver.
 
 To init `pomdok` for your project run:
 ```bash
