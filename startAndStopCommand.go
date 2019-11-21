@@ -38,7 +38,7 @@ var stopCommand = &cli.Command{
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
 		startOrStopCommand("local:server:stop", "stopped 🛑")
-		runCommand("/usr/local/bin/symfony proxy:stop")
+		runCommand("symfony proxy:stop")
 
 		return nil
 	},
@@ -46,7 +46,7 @@ var stopCommand = &cli.Command{
 
 func startOrStopCommand(command string, message string) {
 	if false == symfonyProxyRunning() {
-		runCommand("/usr/local/bin/symfony proxy:start")
+		runCommand("symfony proxy:start")
 		fmt.Print("Started Symfony proxy server 👮\n")
 	}
 
@@ -58,12 +58,19 @@ func startOrStopCommand(command string, message string) {
 	}
 	file, _ := ioutil.ReadFile(symfonyProxyConfigPah)
 
-	symfonyJsonData := SymfonyJsonProxy{}
-	json.Unmarshal(file, &symfonyJsonData)
+	symfonyJSONData := SymfonyJSONProxy{}
+	json.Unmarshal(file, &symfonyJSONData)
 
-	for domain, path := range symfonyJsonData.Domains {
-		runCommand(fmt.Sprintf("/usr/local/bin/symfony %s --dir=%s", command, path))
-		fmt.Printf("%s %s\n", message, yellow(fmt.Sprintf("%s.%s", domain, symfonyJsonData.Tld)))
+	for domain, path := range symfonyJSONData.Domains {
+		forcedPort := symfonyJSONData.Ports[domain]
+		formattedCommand := fmt.Sprintf("symfony %s --dir=%s", command, path)
+
+		if "local:server:start --daemon" == command && 0 != forcedPort {
+			formattedCommand = fmt.Sprintf("symfony %s --port=%d --dir=%s", command, forcedPort, path)
+		}
+
+		runCommand(formattedCommand)
+		fmt.Printf("%s %s\n", message, yellow(fmt.Sprintf("%s.%s", domain, symfonyJSONData.Tld)))
 	}
 
 	return

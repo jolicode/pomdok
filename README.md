@@ -30,6 +30,7 @@ pomdok:
   projects:
     - domain: 'api.project'
       path: '/apps/api'
+      port: 9990
     - domain: 'www.project'
       path: '/apps/front'
     - domain: 'admin.project'
@@ -37,6 +38,8 @@ pomdok:
 ```
 
 You'll need at least `tld` field and one project to have a valid configuration.
+
+For each "project" you have, you'll need at least a `domain` and `port` fields. `port` field is optional and used to force a given port for your webserver.
 
 To init `pomdok` for your project run:
 ```bash

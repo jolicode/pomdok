@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -27,14 +28,12 @@ var initCommand = &cli.Command{
 		printHeader()
 
 		argv := ctx.Argv().(*initT)
-		file := findFileUp(argv.Config, 0)
-		if file == "" {
+		config, baseDirectory, err := loadPomdokConfig(argv.Config)
+		if nil != err {
+			fmt.Println(err)
 			return nil
 		}
 
-		data, _ := ioutil.ReadFile(file)
-		config := PomdokYamlConfig{}
-		yaml.Unmarshal([]byte(data), &config)
 		if config.Pomdok.Tld == "" {
 			fmt.Printf("Configuration file error 🙊. Maybe you should give a %s to your domains 🧐\n", yellow("tld"))
 			return nil
@@ -45,7 +44,7 @@ var initCommand = &cli.Command{
 		}
 
 		fileDomains := make(map[string]string)
-		baseDirectory := path.Dir(file)
+		filePorts := make(map[string]int)
 		for _, element := range config.Pomdok.Projects {
 			if element.Domain == "" {
 				fmt.Printf("Configuration file error 🙊. One of the project has empty/no %s 🧐\n", yellow("domain"))
@@ -66,15 +65,18 @@ var initCommand = &cli.Command{
 				fmt.Printf("Configuration file error 🙊. Domain %s is used more than one time 🧐\n", yellow(element.Domain))
 				return nil
 			}
+
 			fileDomains[element.Domain] = fullPath
+			filePorts[element.Domain] = element.Port
 		}
 
-		symfonyJsonData := SymfonyJsonProxy{
+		symfonyJSONData := SymfonyJSONProxy{
 			Tld:     config.Pomdok.Tld,
 			Port:    7080,
 			Domains: fileDomains,
+			Ports:   filePorts,
 		}
-		symfonyJson, _ := json.MarshalIndent(symfonyJsonData, "", "  ")
+		symfonyJSON, _ := json.MarshalIndent(symfonyJSONData, "", "  ")
 
 		currentUser, _ := user.Current()
 
@@ -84,18 +86,32 @@ var initCommand = &cli.Command{
 			return nil
 		}
 
-		symfonyDirUserUid := fmt.Sprint((info.Sys().(*syscall.Stat_t)).Uid)
-		symfonyDirUser, _ := user.LookupId(symfonyDirUserUid)
+		symfonyDirUserUID := fmt.Sprint((info.Sys().(*syscall.Stat_t)).Uid)
+		symfonyDirUser, _ := user.LookupId(symfonyDirUserUID)
 		if symfonyDirUser.Username != currentUser.Username {
 			fmt.Printf("Permission error 🙊. Directory ~/.symfony is owned by %s, please use: 'sudo chown -R %s ~/.symfony' 🧐\n", yellow(symfonyDirUser.Username), currentUser.Username)
 			return nil
 		}
 
-		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", currentUser.HomeDir), symfonyJson, 0644)
+		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", currentUser.HomeDir), symfonyJSON, 0644)
 		fmt.Printf("Project setup done ✔\n")
 
 		return nil
 	},
+}
+
+func loadPomdokConfig(fileName string) (PomdokYamlConfig, string, error) {
+	config := PomdokYamlConfig{}
+
+	file := findFileUp(fileName, 0)
+	if file == "" {
+		return config, "", errors.New("No file found")
+	}
+
+	data, _ := ioutil.ReadFile(file)
+	yaml.Unmarshal([]byte(data), &config)
+
+	return config, path.Dir(file), nil
 }
 
 func findFileUp(file string, level int) string {
