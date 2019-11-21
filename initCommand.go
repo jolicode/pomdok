@@ -28,7 +28,12 @@ var initCommand = &cli.Command{
 		printHeader()
 
 		argv := ctx.Argv().(*initT)
-		config, baseDirectory, _ := loadPomdokConfig(argv.Config)
+		config, baseDirectory, err := loadPomdokConfig(argv.Config)
+		if nil != err {
+			fmt.Println(err)
+			return nil
+		}
+
 		if config.Pomdok.Tld == "" {
 			fmt.Printf("Configuration file error 🙊. Maybe you should give a %s to your domains 🧐\n", yellow("tld"))
 			return nil
