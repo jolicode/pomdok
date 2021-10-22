@@ -16,9 +16,10 @@ changelog:
   skip: true
 brews:
   - name: pomdok
-    github:
+    tap:
       owner: jolicode
       name: pomdok
+      branch: master
     folder: Formula
     homepage: "https://github.com/jolicode/pomdok"
     description: "Simple wrapper to Symfony Go Binary for multi-app."
