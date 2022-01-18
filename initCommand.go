@@ -73,6 +73,7 @@ var initCommand = &cli.Command{
 		symfonyJSONData := SymfonyJSONProxy{
 			Tld:     config.Pomdok.Tld,
 			Port:    7080,
+			Host:    "localhost",
 			Domains: fileDomains,
 			Ports:   filePorts,
 		}
@@ -80,7 +81,7 @@ var initCommand = &cli.Command{
 
 		currentUser, _ := user.Current()
 
-		info, err := os.Stat(fmt.Sprintf("%s/.symfony", currentUser.HomeDir))
+		info, err := os.Stat(fmt.Sprintf("%s/.symfony5", currentUser.HomeDir))
 		if os.IsNotExist(err) {
 			fmt.Printf("Symfony Binary not installed 🙊. Please use %s to see what you should do 🧐\n", yellow("symfony check"))
 			return nil
@@ -93,7 +94,7 @@ var initCommand = &cli.Command{
 			return nil
 		}
 
-		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", currentUser.HomeDir), symfonyJSON, 0644)
+		ioutil.WriteFile(fmt.Sprintf("%s/.symfony5/proxy.json", currentUser.HomeDir), symfonyJSON, 0644)
 		fmt.Printf("Project setup done ✔\n")
 
 		return nil
