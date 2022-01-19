@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path"
 	"strings"
-	"syscall"
 
 	"github.com/mkideal/cli"
 	"gopkg.in/yaml.v2"
@@ -73,27 +71,19 @@ var initCommand = &cli.Command{
 		symfonyJSONData := SymfonyJSONProxy{
 			Tld:     config.Pomdok.Tld,
 			Port:    7080,
+			Host:    "localhost",
 			Domains: fileDomains,
 			Ports:   filePorts,
 		}
 		symfonyJSON, _ := json.MarshalIndent(symfonyJSONData, "", "  ")
 
-		currentUser, _ := user.Current()
-
-		info, err := os.Stat(fmt.Sprintf("%s/.symfony", currentUser.HomeDir))
-		if os.IsNotExist(err) {
-			fmt.Printf("Symfony Binary not installed 🙊. Please use %s to see what you should do 🧐\n", yellow("symfony check"))
+		configPath := getSymfonyCliConfigPath()
+		if configPath == "" {
+			fmt.Printf("Symfony Binary not installed 🙊. Please use %s to see what you should do 🧐\n", yellow("symfony check:requirements"))
 			return nil
 		}
 
-		symfonyDirUserUID := fmt.Sprint((info.Sys().(*syscall.Stat_t)).Uid)
-		symfonyDirUser, _ := user.LookupId(symfonyDirUserUID)
-		if symfonyDirUser.Username != currentUser.Username {
-			fmt.Printf("Permission error 🙊. Directory ~/.symfony is owned by %s, please use: 'sudo chown -R %s ~/.symfony' 🧐\n", yellow(symfonyDirUser.Username), currentUser.Username)
-			return nil
-		}
-
-		ioutil.WriteFile(fmt.Sprintf("%s/.symfony/proxy.json", currentUser.HomeDir), symfonyJSON, 0644)
+		ioutil.WriteFile(fmt.Sprintf("%s/proxy.json", configPath), symfonyJSON, 0644)
 		fmt.Printf("Project setup done ✔\n")
 
 		return nil
