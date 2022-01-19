@@ -4,6 +4,7 @@ package main
 type SymfonyJSONProxy struct {
 	Tld     string            `json:"tld"`
 	Port    int               `json:"port"`
+	Host    string            `json:"host"`
 	Domains map[string]string `json:"domains"`
 	Ports   map[string]int    `json:"ports"`
 }

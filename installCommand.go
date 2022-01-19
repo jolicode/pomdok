@@ -59,7 +59,7 @@ func linuxInstall() {
 }
 
 func darwinInstall() {
-	phpInstall("brew install php72 nss")
+	phpInstall("brew install php nss")
 	symfonyCliInstall()
 
 	return
@@ -88,8 +88,9 @@ func symfonyCliInstall() {
 	exists, _ := checkBinaryExists("symfony")
 	if exists == false {
 		fmt.Printf("Starting %s installation 🏃\n", yellow("symfony"))
-		runCommand("wget https://get.symfony.com/cli/installer -O - | bash")
-		runCommand("mv $HOME/.symfony/bin/symfony /usr/local/bin/")
+
+		runCommand("brew install symfony-cli")
+		runCommand("symfony version")
 
 		exists, _ = checkBinaryExists("symfony")
 		if exists == false {
@@ -99,10 +100,11 @@ func symfonyCliInstall() {
 
 		currentUser, _ := user.Current()
 		username := currentUser.Username
+		configPath := getSymfonyCliConfigPath()
 		if runtime.GOOS == "darwin" {
-			runCommand(fmt.Sprintf("sudo chown -R %s:staff ~/.symfony", username))
+			runCommand(fmt.Sprintf("sudo chown -R %s:staff %s", username, configPath))
 		} else {
-			runCommand(fmt.Sprintf("sudo chown -R %s:%s ~/.symfony", username, username))
+			runCommand(fmt.Sprintf("sudo chown -R %s:%s %s", username, username, configPath))
 		}
 
 		fmt.Printf("%s installed ✔\n", yellow("symfony"))
