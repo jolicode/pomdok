@@ -5,21 +5,21 @@
 class Pomdok < Formula
   desc "Simple wrapper to Symfony Go Binary for multi-app."
   homepage "https://github.com/jolicode/pomdok"
-  version "1.2.1"
+  version "1.3.0"
   depends_on :macos
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/jolicode/pomdok/releases/download/v1.2.1/pomdok_1.2.1_Darwin_arm64.tar.gz"
-      sha256 "6bb2c08e324582d58eba1e7bc4e75725c02d30984df7126d6cf9d9af5c1902c1"
+      url "https://github.com/jolicode/pomdok/releases/download/v1.3.0/pomdok_1.3.0_Darwin_arm64.tar.gz"
+      sha256 "549ac70eab7f08a5f489c936406d976f957cc4c6669f1b8c3a0fcbf127d799f7"
 
       def install
         bin.install "pomdok"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/jolicode/pomdok/releases/download/v1.2.1/pomdok_1.2.1_Darwin_amd64.tar.gz"
-      sha256 "4277b2fc6e2f69654cd9b625c4072c10f15bf122f3131bf3e4e0f18cffca75bd"
+      url "https://github.com/jolicode/pomdok/releases/download/v1.3.0/pomdok_1.3.0_Darwin_amd64.tar.gz"
+      sha256 "8bba08e0f840ea95e178fe655b7895b79b9e8d8fd17e5dcb04461e71d454c66d"
 
       def install
         bin.install "pomdok"
