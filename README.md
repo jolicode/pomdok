@@ -41,6 +41,20 @@ You'll need at least `tld` field and one project to have a valid configuration.
 
 For each "project" you have, you'll need at least a `domain` and `port` fields. `port` field is optional and used to force a given port for your webserver.
 
+You can add domain aliases for a project by duplicating its entry in the list and changing the domain name (path and port must remain the same), for example:
+
+```yaml
+pomdok:
+  tld: 'test'
+  projects:
+    - domain: 'api.project'
+      path: '/apps/api'
+      port: 9990
+    - domain: 'api-private.project'
+      path: '/apps/api'
+      port: 9990
+```
+
 To init `pomdok` for your project run:
 ```bash
 pomdok init
