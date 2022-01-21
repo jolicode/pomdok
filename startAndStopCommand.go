@@ -10,6 +10,24 @@ import (
 	"github.com/mkideal/cli"
 )
 
+type LocalServerCommand string
+
+const (
+	LocalServerStart LocalServerCommand = "start"
+	LocalServerStop  LocalServerCommand = "stop"
+)
+
+func (command LocalServerCommand) String() string {
+	switch command {
+	case LocalServerStart:
+		return "local:server:start --daemon"
+	case LocalServerStop:
+		return "local:server:stop"
+	default:
+		return ""
+	}
+}
+
 type startT struct {
 	cli.Helper
 }
@@ -20,7 +38,7 @@ var startCommand = &cli.Command{
 	Argv: func() interface{} { return new(startT) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
-		startOrStopCommand("local:server:start --daemon", "started ✔")
+		startOrStopCommand(LocalServerStart, "started ✔")
 
 		return nil
 	},
@@ -36,14 +54,19 @@ var stopCommand = &cli.Command{
 	Argv: func() interface{} { return new(stopT) },
 	Fn: func(ctx *cli.Context) error {
 		printHeader()
-		startOrStopCommand("local:server:stop", "stopped 🛑")
+		startOrStopCommand(LocalServerStop, "stopped 🛑")
 		runCommand("symfony proxy:stop")
 
 		return nil
 	},
 }
 
-func startOrStopCommand(command string, message string) {
+func startOrStopCommand(serverCommand LocalServerCommand, message string) {
+	command := serverCommand.String()
+	if command == "" {
+		return
+	}
+
 	if false == symfonyProxyRunning() {
 		runCommand("symfony proxy:start")
 		fmt.Print("Started Symfony proxy server 👮\n")
@@ -62,12 +85,16 @@ func startOrStopCommand(command string, message string) {
 	for domain, path := range symfonyJSONData.Domains {
 		forcedPort := symfonyJSONData.Ports[domain]
 		formattedCommand := fmt.Sprintf("symfony %s --dir=%s", command, path)
+		serverRunning := symfonyServerRunning(path)
 
-		if "local:server:start --daemon" == command && 0 != forcedPort {
-			formattedCommand = fmt.Sprintf("symfony %s --port=%d --dir=%s", command, forcedPort, path)
+		if (serverCommand == LocalServerStart && !serverRunning) || (serverCommand == LocalServerStop && serverRunning) {
+			if serverCommand == LocalServerStart && forcedPort != 0 {
+				formattedCommand = fmt.Sprintf("symfony %s --port=%d --dir=%s", command, forcedPort, path)
+			}
+
+			runCommand(formattedCommand)
 		}
 
-		runCommand(formattedCommand)
 		fmt.Printf("%s %s\n", message, yellow(fmt.Sprintf("%s.%s", domain, symfonyJSONData.Tld)))
 	}
 
@@ -82,4 +109,9 @@ func symfonyProxyRunning() bool {
 	}
 
 	return true
+}
+
+func symfonyServerRunning(path string) bool {
+	grepNotRunning := " grep -A 1 'Local Web Server' | grep 'Not Running'"
+	return len(outputCommand(fmt.Sprintf("symfony local:server:status --dir=%s | %s", path, grepNotRunning))) == 0
 }
