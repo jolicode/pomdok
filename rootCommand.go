@@ -13,7 +13,7 @@ type appT struct {
 
 var app = appT{
 	"pomdok",
-	"v1.2.0",
+	"v1.3.1",
 }
 
 func sprintHeader() string {
